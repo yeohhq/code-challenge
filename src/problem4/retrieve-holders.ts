@@ -24,7 +24,7 @@ const test = async () => {
                 const res = await contract.balanceOf(holder);
                 balances.push({
                     address: holder, 
-                    amount: res
+                    amount: res.toNumber()
                 });
             }
         ));

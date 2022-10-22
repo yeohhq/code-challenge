@@ -64,7 +64,7 @@ var test = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     res = _a.sent();
                                     balances_1.push({
                                         address: holder,
-                                        amount: res
+                                        amount: res.toNumber()
                                     });
                                     return [2 /*return*/];
                             }
