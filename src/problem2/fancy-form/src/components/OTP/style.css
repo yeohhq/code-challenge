@@ -1,0 +1,16 @@
+.otpContainer {
+  color: white;
+  padding-top: 2rem;
+}
+
+.otpInput {
+  width: 4rem !important;
+  height: 4rem;
+  margin: 0 0.5rem;
+  
+  font-size: 2rem;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid rgb(25,59,77);
+  background: transparent;
+}
