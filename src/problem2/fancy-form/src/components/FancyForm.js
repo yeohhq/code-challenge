@@ -199,29 +199,36 @@ export function FormikStepper({ children, ...props }) {
 					return (
 						<Section index={index} label={label}>
 							{child}
-							{index > 0 ? (
-								<Button
-									hidden={isSubmitting}
-									onClick={decrementStep}
-								>
-									Back
-								</Button>
-							) : null}
-							<Button
-								startIcon={
-									isSubmitting ? (
-										<CircularProgress size="1rem" />
-									) : null
-								}
-								disabled={isSubmitting}
-								type="submit"
+							<Box
+								sx={{
+									display: 'flex',
+									justifyContent: 'end'
+								}}
 							>
-								{isSubmitting
-									? 'Submitting'
-									: index === childrenArray.length - 1
-									? 'Submit'
-									: 'Next'}
-							</Button>
+								{index > 0 ? (
+									<Button
+										hidden={isSubmitting}
+										onClick={decrementStep}
+									>
+										Back
+									</Button>
+								) : null}
+								<Button
+									startIcon={
+										isSubmitting ? (
+											<CircularProgress size="1rem" />
+										) : null
+									}
+									disabled={isSubmitting}
+									type="submit"
+								>
+									{isSubmitting
+										? 'Submitting'
+										: index === childrenArray.length - 1
+										? 'Submit'
+										: 'Next'}
+								</Button>
+							</Box>
 						</Section>
 					)
 				})}

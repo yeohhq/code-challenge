@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import SingleInput from './SingleInput'
+import RequestOTP from './RequestOTP'
 import _ from 'lodash'
 import './style.css'
 
@@ -159,6 +160,7 @@ export const OTPInput = (props) => {
 
 	return (
 		<div {...rest}>
+			<RequestOTP />
 			{Array(length)
 				.fill('')
 				.map((_, index) => (

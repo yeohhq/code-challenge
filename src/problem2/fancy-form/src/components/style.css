@@ -1,6 +1,6 @@
 .MuiButton-root {
-    margin-left: 16px !important;
-    margin-right: 16px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
     color: rgb(25,59,77) !important;
 }
 
@@ -8,8 +8,20 @@
     margin-bottom: 24px;
 }
 
-.MuiStepLabel-labelContainer {
-    /* width: 50% !important; */
+.MuiOutlinedInput-root {
+    border-radius: 20px !important;
+}
+
+.MuiButton-outlined {
+    border-radius: 20px !important;
+    background-color: rgb(25,59,77) !important;
+    color: rgb(226,252,164) !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.MuiFormControl-root  {
+    width: 100% !important;
 }
 
 .MuiStepLabel-label {

@@ -1,47 +1,32 @@
 import './App.css'
 import { FancyForm } from './components/FancyForm'
-import { Modal } from 'antd'
 import switcheo from './assets/switcheo.svg'
 import { useEffect, useState } from 'react'
 
 function App() {
-	const [openModal, setOpenModal] = useState(false)
-
-	useEffect(() => {
-		if (openModal) {
-			countDown()
-		}
-	}, [openModal])
-
-	const countDown = () => {
-		let secondsToGo = 3
-
-		const modal = Modal.success({
-			title: 'Successfully authenticated',
-			content: 'Please wait while we process your transaction...',
-			onOk: () => {
-				setOpenModal(false)
+	// Prevent default scrolling so snap scroll to sections
+	function useImperativeDisableScroll({ element, disabled }) {
+		useEffect(() => {
+			if (!element) {
+				return
 			}
-		})
 
-		const timer = setInterval(() => {
-			secondsToGo -= 1
+			element.style.overflowY = disabled ? 'hidden' : 'scroll'
 
-			modal.update({
-				content: 'A little more to go...'
-			})
-		}, 1000)
-
-		setTimeout(() => {
-			clearInterval(timer)
-			modal.destroy()
-			setOpenModal(false)
-		}, secondsToGo * 1000)
+			return () => {
+				element.style.overflowY = 'scroll'
+			}
+		}, [element, disabled])
 	}
+
+	useImperativeDisableScroll({
+		element: document.scrollingElement,
+		disabled: true
+	})
 
 	return (
 		<div className="App">
-			<FancyForm setOpenModal={setOpenModal} />
+			<FancyForm />
 		</div>
 	)
 }
