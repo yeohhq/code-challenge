@@ -24,7 +24,9 @@ export const OTPInput = (props) => {
 
 	// Reset form values
 	useEffect(() => {
-		setOTPValues(emptyOtp)
+		if (reset) {
+			setOTPValues(emptyOtp)
+		}
 	}, [reset, emptyOtp])
 
 	// Helper to return OTP from inputs
