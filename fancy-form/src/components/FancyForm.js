@@ -8,6 +8,7 @@ import { ethers } from 'ethers'
 import { OTPInput } from './OTP/OTPInput'
 import './style.css'
 import switcheoArrow from '../assets/arrow.svg'
+import _ from 'lodash'
 
 // Timeout for on submit
 const sleep = (time) => new Promise((acc) => setTimeout(acc, time))
