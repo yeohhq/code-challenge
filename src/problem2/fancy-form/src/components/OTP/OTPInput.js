@@ -22,6 +22,11 @@ export const OTPInput = (props) => {
 	const [activeInput, setActiveInput] = useState(0)
 	const [otpValues, setOTPValues] = useState(emptyOtp)
 
+	// Reset form values
+	useEffect(() => {
+		setOTPValues(emptyOtp)
+	}, [reset, emptyOtp])
+
 	// Helper to return OTP from inputs
 	const handleOtpChange = useCallback(
 		(otp) => {
@@ -30,12 +35,6 @@ export const OTPInput = (props) => {
 		},
 		[onChangeOTP]
 	)
-
-	// Reset form values
-	useEffect(() => {
-		handleOtpChange(emptyOtp)
-		setOTPValues(emptyOtp)
-	}, [reset, emptyOtp, handleOtpChange])
 
 	// Focus `inputIndex` input
 	const focusInput = useCallback(
