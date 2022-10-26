@@ -18,7 +18,7 @@ const SingleInput = ({ focus, autoFocus, ...props }) => {
 		}
 	}, [autoFocus, focus, prevFocus])
 
-	return <input ref={inputRef} {...props} />
+	return <input type="number" ref={inputRef} {...props} />
 }
 
 export default SingleInput

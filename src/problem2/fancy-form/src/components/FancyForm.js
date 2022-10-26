@@ -210,10 +210,9 @@ export function FormikStepper({ setShowOTPErrorText, children, ...props }) {
 	}
 
 	function validateOTP(value) {
-		const num = Number.parseInt(value)
 		if (!value) {
 			return false
-		} else if (!_.isNumber(num)) {
+		} else if (_.isNaN(value)) {
 			return false
 		} else if (value.length !== 6) {
 			return false
