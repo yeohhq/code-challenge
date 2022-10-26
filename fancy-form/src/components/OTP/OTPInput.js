@@ -27,7 +27,7 @@ export const OTPInput = (props) => {
 		console.log('resetting')
 		handleOtpChange(emptyOtp)
 		setOTPValues(emptyOtp)
-	}, [reset])
+	}, [reset, emptyOtp])
 
 	// Helper to return OTP from inputs
 	const handleOtpChange = useCallback(
