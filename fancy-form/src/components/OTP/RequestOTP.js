@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
-import { Modal } from 'antd'
-import _, { set } from 'lodash'
+import _ from 'lodash'
 import OTPModal from './OTPModal'
 
 const RequestOTP = () => {

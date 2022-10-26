@@ -6,7 +6,6 @@ import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 import { ethers } from 'ethers'
 import { OTPInput } from './OTP/OTPInput'
-import _, { findLastKey, stubFalse } from 'lodash'
 import './style.css'
 import switcheoArrow from '../assets/arrow.svg'
 
@@ -210,7 +209,7 @@ export function FormikStepper({ setShowOTPErrorText, children, ...props }) {
 	}
 
 	function validateOTP(value) {
-		const num = new Number(value)
+		const num = Number.parseInt(value)
 		if (!value) {
 			return false
 		} else if (!_.isNumber(num)) {

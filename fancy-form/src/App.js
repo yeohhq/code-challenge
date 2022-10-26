@@ -1,7 +1,7 @@
 import './App.css'
 import { FancyForm } from './components/FancyForm'
 import switcheo from './assets/switcheo.svg'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Box } from '@mui/material'
 
 function App() {
