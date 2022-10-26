@@ -1,16 +1,31 @@
-.otpContainer {
-  color: white;
-  padding-top: 2rem;
+/*  Add breakpoint for iPhone */
+@media only screen and (max-width: 500px) {
+  .otpContainer {
+    display: flex;
+    flex-direction: row;
+    min-width: max-content;
+  }
+
+  .otpWrapper {
+    display: grid !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .otpInput {
+    width: 3rem !important;
+    height: 3rem;
+  }
 }
 
 .otpInput {
   width: 4rem !important;
   height: 4rem;
-  margin: 0 0.5rem;
+  margin: 0.5rem;
   
   font-size: 2rem;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 100px;
   border: 1px solid rgb(25,59,77);
   background: transparent;
 }

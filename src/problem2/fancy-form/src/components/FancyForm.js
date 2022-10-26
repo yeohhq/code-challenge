@@ -1,12 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import { Field, Form, Formik } from 'formik'
-import { Box, Button, CircularProgress } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useInView } from 'framer-motion'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 import { ethers } from 'ethers'
 import { OTPInput } from './OTP/OTPInput'
+import _, { findLastKey, stubFalse } from 'lodash'
 import './style.css'
+import switcheoArrow from '../assets/arrow.svg'
 
 // Timeout for on submit
 const sleep = (time) => new Promise((acc) => setTimeout(acc, time))
@@ -26,7 +28,7 @@ function Section({ index, label, children }) {
 			<h1>{label}</h1>
 			<span
 				style={{
-					transform: isInView ? 'none' : 'translateX(-200px)',
+					transform: isInView ? 'none' : 'translateY(200px)',
 					opacity: isInView ? 1 : 0,
 					transition:
 						'all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s'
@@ -38,7 +40,13 @@ function Section({ index, label, children }) {
 	)
 }
 
-export function FancyForm({ setOpenModal }) {
+export function FancyForm() {
+	const [submissionText, setSubmissionText] = useState(
+		'Processing your transaction...'
+	)
+	const [showOTPErrorText, setShowOTPErrorText] = useState(false)
+	const [hasSubmitted, setHasSubmitted] = useState(false)
+
 	// Custom validation for ETH address
 	Yup.addMethod(Yup.string, 'ethAddress', function (errorMessage) {
 		return this.test('test-eth-address', errorMessage, function (value) {
@@ -51,23 +59,20 @@ export function FancyForm({ setOpenModal }) {
 		})
 	})
 
-	const onSubmit = async (values) => {
-		setOpenModal(true)
-		await sleep(3000)
-		console.log(values)
-		scrollToSection(0) // Scroll back to top
-	}
-
-	function validateOTP(value) {
-		let error
-		if (!value) {
-			error = 'This field is required'
-		} else if (!/^[0-9]+$/) {
-			error = 'Please only fill in digits 0 to 9'
-		} else if (value.length !== 6) {
-			error = 'Please fill in exactly 6 digits'
+	useEffect(() => {
+		// Mimic form submit complete
+		if (hasSubmitted) {
+			setSubmissionText('Transaction completed!')
+		} else {
+			setSubmissionText('Processing your transaction...')
 		}
-		return error
+	}, [hasSubmitted])
+
+	const onSubmit = async (values, helpers) => {
+		await sleep(3000)
+		setHasSubmitted(true)
+		// Reset form
+		helpers.resetForm()
 	}
 
 	useEffect(() => {
@@ -79,11 +84,12 @@ export function FancyForm({ setOpenModal }) {
 		<div>
 			<FormikStepper
 				initialValues={{
-					ethAddress: '0xd1D8B2AaE2ebb2ACF013b803bC3c24CA1303a392',
-					Amount: 2,
-					OTP: '123456'
+					ethAddress: '', // '0xd1D8B2AaE2ebb2ACF013b803bC3c24CA1303a392'
+					Amount: '', // 2
+					OTP: '' // 123456
 				}}
 				onSubmit={onSubmit}
+				setShowOTPErrorText={setShowOTPErrorText}
 			>
 				<FormikStep
 					validationSchema={Yup.object({
@@ -114,7 +120,7 @@ export function FancyForm({ setOpenModal }) {
 				</FormikStep>
 
 				<FormikStep label="OTP Authentication">
-					<Box paddingBottom={4}>
+					<Box paddingBottom={2}>
 						{
 							<Field fullWidth name="OTP" id="OTP">
 								{({
@@ -130,15 +136,35 @@ export function FancyForm({ setOpenModal }) {
 											inputClassName="otpInput"
 											value={value}
 											onChangeOTP={setFieldValue}
-											validate={validateOTP}
+											reset={hasSubmitted}
 										/>
 									)
 								}}
 							</Field>
 						}
 					</Box>
+					{showOTPErrorText ? (
+						<Box className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained">
+							OTP does not match
+						</Box>
+					) : null}
 				</FormikStep>
 			</FormikStepper>
+			<Section index={'submit'} label={submissionText}>
+				<Box paddingBottom={4}>
+					<img src={switcheoArrow} alt="Switcheo-Arrow"></img>
+				</Box>
+				{hasSubmitted ? (
+					<Button
+						onClick={() => {
+							scrollToSection(0)
+							setHasSubmitted(false)
+						}}
+					>
+						Create new transaction
+					</Button>
+				) : null}
+			</Section>
 		</div>
 	)
 }
@@ -147,15 +173,28 @@ export function FormikStep({ children, ...props }) {
 	return <>{children}</>
 }
 
-export function FormikStepper({ children, ...props }) {
+export function FormikStepper({ setShowOTPErrorText, children, ...props }) {
 	const childrenArray = React.Children.toArray(children)
 	const [step, setStep] = useState(0)
 	const currentChild = childrenArray[step]
 
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
+	useLayoutEffect(() => {
+		setStep(0)
+		setIsSubmitting(false)
+	}, [])
+
 	function isLastStep() {
 		return step === childrenArray.length - 1
+	}
+
+	function hasSubmit(index) {
+		return index === childrenArray.length - 1
+	}
+
+	function hasBack(index) {
+		return index > 0
 	}
 
 	function decrementStep() {
@@ -170,10 +209,16 @@ export function FormikStepper({ children, ...props }) {
 		scrollToSection(newStep)
 	}
 
-	function formReset(helpers) {
-		helpers.resetForm()
-		setStep(0)
-		setIsSubmitting(false)
+	function validateOTP(value) {
+		const num = new Number(value)
+		if (!value) {
+			return false
+		} else if (!_.isNumber(num)) {
+			return false
+		} else if (value.length !== 6) {
+			return false
+		}
+		return true
 	}
 
 	return (
@@ -183,11 +228,18 @@ export function FormikStepper({ children, ...props }) {
 			onSubmit={async (values, helpers) => {
 				if (isLastStep()) {
 					// On last step of form
-					setIsSubmitting(true)
-					await props.onSubmit(values, helpers)
 
-					// Reset form
-					formReset(helpers)
+					// Validate OTP
+					if (validateOTP(values.OTP)) {
+						setShowOTPErrorText(false)
+						setIsSubmitting(true)
+						scrollToSection('submit')
+
+						await props.onSubmit(values, helpers)
+						setStep(0)
+					} else {
+						setShowOTPErrorText(true)
+					}
 				} else {
 					incrementStep() // Validated, move to next step
 				}
@@ -205,28 +257,16 @@ export function FormikStepper({ children, ...props }) {
 									justifyContent: 'end'
 								}}
 							>
-								{index > 0 ? (
+								{hasBack(index) ? (
 									<Button
-										hidden={isSubmitting}
+										disabled={isSubmitting}
 										onClick={decrementStep}
 									>
 										Back
 									</Button>
 								) : null}
-								<Button
-									startIcon={
-										isSubmitting ? (
-											<CircularProgress size="1rem" />
-										) : null
-									}
-									disabled={isSubmitting}
-									type="submit"
-								>
-									{isSubmitting
-										? 'Submitting'
-										: index === childrenArray.length - 1
-										? 'Submit'
-										: 'Next'}
+								<Button type="submit">
+									{hasSubmit(index) ? 'Submit' : 'Next'}
 								</Button>
 							</Box>
 						</Section>

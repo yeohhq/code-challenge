@@ -1,54 +1,54 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { Modal } from 'antd'
-import _ from 'lodash'
+import _, { set } from 'lodash'
 import OTPModal from './OTPModal'
 
 const RequestOTP = () => {
 	const [hasRequestedOTP, setHasRequestedOTP] = useState(false)
-	const [openModal, setOpenModal] = useState(false)
+	const [timer, setTimer] = useState(60)
 
+	// Start 60 seconds countdown for requesting new OTP
 	useEffect(() => {
-		if (openModal) {
-			// countDown()
+		if (hasRequestedOTP) {
+			countDown()
 		}
-	}, [openModal])
+	}, [hasRequestedOTP])
 
 	const countDown = () => {
-		let secondsToGo = 3
-
-		const modal = Modal.success({
-			title: 'Requesting for OTP',
-			content: 'Please wait while we process your transaction...',
-			onOk: () => {
-				setOpenModal(false)
-			}
-		})
+		let secondsToGo = 60
 
 		const timer = setInterval(() => {
 			secondsToGo -= 1
-
-			modal.update({
-				content: 'A little more to go...'
-			})
+			setTimer(secondsToGo)
 		}, 1000)
 
 		setTimeout(() => {
 			clearInterval(timer)
-			modal.destroy()
-			setOpenModal(false)
+			setTimer(60)
+			setHasRequestedOTP(false)
 		}, secondsToGo * 1000)
 	}
 
 	return (
 		<Box
-			paddingBottom={2}
+			paddingBottom={4}
 			sx={{
 				display: 'flex',
-				justifyContent: 'start'
+				flexDirection: 'column',
+				justifyContent: 'center',
+				alignItems: 'center'
 			}}
 		>
-			<OTPModal setHasRequestedOTP={setHasRequestedOTP} />
+			<Box paddingBottom={2}>
+				{hasRequestedOTP
+					? `Request for new OTP in ${timer} seconds`
+					: null}
+			</Box>
+			<OTPModal
+				disabled={hasRequestedOTP}
+				setHasRequestedOTP={setHasRequestedOTP}
+			/>
 		</Box>
 	)
 }

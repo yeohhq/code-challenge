@@ -14,14 +14,26 @@
 
 .MuiButton-outlined {
     border-radius: 20px !important;
+    border: none !important;
     background-color: rgb(25,59,77) !important;
     color: rgb(226,252,164) !important;
     margin-left: 8px !important;
     margin-right: 8px !important;
 }
 
-.MuiFormControl-root  {
+.MuiButton-outlined:disabled {
+    background-color: rgb(25,59,77, 0.3) !important;
+    color: rgb(226,252,164, 0.5) !important;
+}
+
+.MuiPaper-root {
+    border-radius: 20px !important;
+    padding: 12px;
+}
+
+.MuiPaper-root .MuiFormControl-root  {
     width: 100% !important;
+    margin-top: 20px !important;
 }
 
 .MuiStepLabel-label {
@@ -37,7 +49,19 @@
     color: #d32f2f !important;
 }
 
-input:hover, input:focus-visible {
+input:hover, input:focus-visible, button:hover, button:focus-visible {
     outline-color: rgb(226,252,164) !important;
+}
+
+.MuiButton-root:hover {
+    border: none !important;
+}
+
+circle,
+rect,
+line {
+  stroke-width: 40px;
+  stroke-linecap: stroke-linecap;
+  fill: transparent;
 }
 

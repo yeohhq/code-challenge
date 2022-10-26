@@ -2,6 +2,7 @@ import './App.css'
 import { FancyForm } from './components/FancyForm'
 import switcheo from './assets/switcheo.svg'
 import { useEffect, useState } from 'react'
+import { Box } from '@mui/material'
 
 function App() {
 	// Prevent default scrolling so snap scroll to sections
@@ -26,6 +27,13 @@ function App() {
 
 	return (
 		<div className="App">
+			<Box paddingBottom={4}>
+				<img
+					style={{ position: 'fixed', left: 0, opacity: 0.1 }}
+					src={switcheo}
+					alt="Switcheo-Logo"
+				></img>
+			</Box>
 			<FancyForm />
 		</div>
 	)

@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import {
-	Box,
-	Modal,
-	Fade,
+	TextField,
 	Button,
-	Typography,
-	FormControl,
-	OutlinedInput,
-	InputLabel,
-	Backdrop
+	Dialog,
+	DialogContent,
+	DialogActions,
+	DialogTitle,
+	DialogContentText
 } from '@mui/material'
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward'
 import _ from 'lodash'
@@ -25,7 +23,7 @@ const style = {
 	p: 4
 }
 
-export default function OTPModal({ setHasRequestedOTP }) {
+export default function OTPModal({ disabled, setHasRequestedOTP }) {
 	const [open, setOpen] = useState(false)
 	const [mobileNo, setMobileNo] = useState('')
 	const [isValidMobileNo, setIsValidMobileNo] = useState(true)
@@ -37,86 +35,49 @@ export default function OTPModal({ setHasRequestedOTP }) {
 		setMobileNo(val)
 	}
 
-	function handleRequestOTP() {
+	function handleRequestOTP(e) {
+		e.preventDefault()
+
 		if (!_.isNumber(mobileNo) && mobileNo.length !== 8) {
 			setIsValidMobileNo(false)
 		} else {
 			// Valid mobile no
 			setOpen(false)
-			setHasRequestedOTP(false)
+			setHasRequestedOTP(true)
 		}
 	}
 
 	return (
 		<div>
-			<Button variant="outlined" onClick={handleOpen}>
+			<Button disabled={disabled} variant="outlined" onClick={handleOpen}>
 				Request OTP
 			</Button>
-			<Modal
-				aria-labelledby="transition-modal-title"
-				aria-describedby="transition-modal-description"
-				open={open}
-				onClose={handleClose}
-				closeAfterTransition
-				BackdropComponent={Backdrop}
-				BackdropProps={{
-					timeout: 500
-				}}
-			>
-				<Fade in={open}>
-					<Box sx={style}>
-						<Box>
-							<Typography
-								id="transition-modal-title"
-								variant="h6"
-								component="h2"
-								style={{ fontWeight: 600 }}
-							>
-								Request for OTP
-							</Typography>
-							<Typography
-								id="transition-modal-description"
-								sx={{ mt: 2 }}
-							>
-								Please enter your mobile number
-							</Typography>
-						</Box>
-						<Box component="form" paddingTop={4} paddingBottom={2}>
-							<FormControl>
-								<InputLabel
-									htmlFor="component-simple"
-									error={!isValidMobileNo}
-								>
-									Mobile Number
-								</InputLabel>
-								<OutlinedInput
-									id="component-simple"
-									value={mobileNo}
-									onChange={handleOnMobileChange}
-									label="Mobile Number"
-									inputProps={{
-										inputMode: 'numeric',
-										pattern: '[0-9]*'
-									}}
-									required
-									error={!isValidMobileNo}
-									aria-errormessage="Please provide a valid 8-digit mobile number (SG)"
-								/>
-							</FormControl>
-						</Box>
-						<Box
-							sx={{ display: 'flex', justifyContent: 'flex-end' }}
-						>
-							<Button
-								onClick={handleRequestOTP}
-								endIcon={<ArrowOutwardIcon />}
-							>
-								Send OTP
-							</Button>
-						</Box>
-					</Box>
-				</Fade>
-			</Modal>
+			<Dialog open={open} onClose={handleClose}>
+				<DialogTitle>Request for OTP</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						Please enter your mobile number
+					</DialogContentText>
+					<TextField
+						autoFocus
+						margin="dense"
+						id="mobileNumber"
+						label="Mobile Number"
+						type="number"
+						fullWidth
+						vali
+						onChange={handleOnMobileChange}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button
+						onClick={handleRequestOTP}
+						endIcon={<ArrowOutwardIcon />}
+					>
+						Send OTP
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</div>
 	)
 }

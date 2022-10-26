@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import SingleInput from './SingleInput'
 import RequestOTP from './RequestOTP'
+import { Box } from '@mui/material'
 import _ from 'lodash'
 import './style.css'
 
@@ -14,13 +15,19 @@ export const OTPInput = (props) => {
 		inputStyle,
 		name,
 		label,
-		showErrorMessage,
-		errorMessage,
+		reset,
 		...rest
 	} = props
-
+	const emptyOtp = Array(length).fill('')
 	const [activeInput, setActiveInput] = useState(0)
-	const [otpValues, setOTPValues] = useState(Array(length).fill(''))
+	const [otpValues, setOTPValues] = useState(emptyOtp)
+
+	// Reset form values
+	useEffect(() => {
+		console.log('resetting')
+		handleOtpChange(emptyOtp)
+		setOTPValues(emptyOtp)
+	}, [reset])
 
 	// Helper to return OTP from inputs
 	const handleOtpChange = useCallback(
@@ -60,7 +67,7 @@ export const OTPInput = (props) => {
 	const changeCodeAtFocus = useCallback(
 		(val) => {
 			const updatedOTPValues = [...otpValues]
-			updatedOTPValues[activeInput] = val || ''
+			updatedOTPValues[activeInput] = val[0] || '' // only takes first digit
 			setOTPValues(updatedOTPValues)
 			handleOtpChange(updatedOTPValues)
 		},
@@ -159,27 +166,31 @@ export const OTPInput = (props) => {
 	)
 
 	return (
-		<div {...rest}>
-			<RequestOTP />
-			{Array(length)
-				.fill('')
-				.map((_, index) => (
-					<SingleInput
-						label={`SingleInput-${index}`}
-						name={`SingleInput-${index}`}
-						focus={activeInput === index}
-						value={otpValues[index]}
-						autoFocus={autoFocus}
-						onFocus={handleOnFocus(index)}
-						onChange={handleOnChange}
-						onKeyDown={handleOnKeyDown}
-						onBlur={onBlur}
-						onPaste={handleOnPaste}
-						style={inputStyle}
-						className={inputClassName}
-						disabled={disabled}
-					/>
-				))}
+		<div className="otpWrapper">
+			<Box>
+				<RequestOTP />
+			</Box>
+			<Box {...rest}>
+				{Array(length)
+					.fill('')
+					.map((_, index) => (
+						<SingleInput
+							label={`SingleInput-${index}`}
+							name={`SingleInput-${index}`}
+							focus={activeInput === index}
+							value={otpValues[index]}
+							autoFocus={autoFocus}
+							onFocus={handleOnFocus(index)}
+							onChange={handleOnChange}
+							onKeyDown={handleOnKeyDown}
+							onBlur={onBlur}
+							onPaste={handleOnPaste}
+							style={inputStyle}
+							className={inputClassName}
+							disabled={disabled}
+						/>
+					))}
+			</Box>
 		</div>
 	)
 }
